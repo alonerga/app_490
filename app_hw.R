@@ -37,15 +37,16 @@ ui <- fluidPage( #UI is all about the look of the app
       selectInput(inputId = "xvar",
                   label = "X axis",
                   choices = var_axis,
-                  selected = "mpg"), # the first one that will be picked when you open the app
+                  selected = "x"), # the first one that will be picked when you open the app
       
       
       selectInput(inputId = "yvar",
                   label = "Y axis",
                   choices = var_axis,
-                  selected = "hp"),
+                  selected = "y"),
       
-      submitButton(text = "Go") # can use submit or action 
+      
+      submitButton(text = "Go!") # can use submit or action 
     ),
     
     
@@ -71,12 +72,17 @@ server <- function(input, output) { # what is happening under the hood to make t
   output$mtcars_plot <- renderPlot({
     
     ggplot(data = cars_filt(), # since we are using reactive for cars_filt, it needs () in the ggplot
-           mapping = aes_string(x = "mpg", 
-                                y = "hp", 
-                                color = "wt")) + 
-      geom_point()
+           mapping = aes_string(x = input$xvar, 
+                                y = input$yvar)) + 
+          geom_point()
     
   })
+  
+  output$diagnostic <- renderText(
+    input$mpg_adjuster
+  )
+  
+
 }
 
 # Run the application 
